@@ -2,3 +2,21 @@
     max-height: 250px;
     overflow: scroll;
 }
+
+.Sketching {
+    color: black;
+    font-weight: bold;
+    background-color: magenta;
+}
+
+.Drawing {
+    color: black;
+    font-weight: bold;
+    background-color: rebeccapurple;
+}
+
+.Painting {
+    color: black;
+    font-weight: bold;
+    background-color: aquamarine;
+}
