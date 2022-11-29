@@ -54,7 +54,7 @@
 
                     <!-- Use v-for to create option elements, one for each type -->  
                     <select class="form-control" v-model="type"> before any edits
-                        <option v-for="activityType in types">{{ activityType }}</option>       <!--maybe this is where I do the first part of the lab?-->
+                        <option v-for="activityType in types">{{ activityType }}</option>    
                     </select>
                 </div>
 
@@ -84,6 +84,13 @@
 
                 </div>
 
+                <!--text area-->
+                <div>
+                    <div class="form-group">
+                        <textarea v-model="comments"></textarea>
+                    </div>
+                </div>
+
                 <div>
                     <!-- Add v-on:click --> 
                     <button class="btn btn-primary mt-2" type="button" v-on:click="submit">Add record</button>
@@ -108,17 +115,19 @@
                             <th>How many hours?</th>
                             <th>Type</th>
                             <th>Media</th>
+                            <th>Completed?</th>
+                            <th>Notes:</th>
                         </tr>
-                        <!-- use v-for to create one table row for each activity record -->
-                    <!-- <tr v-for="record in activityRecords">  BEFORE ADDING V-BIND -->
+
                         
-                        <tr v-for="record in activityRecords" v-bind:class=" { Sketching: record.type, Drawing: record.type, Painting: record.type } ">
-                        <!-- I have tried everything I can think of and this is the best I will get, for some reason only the Aquamarine color is showing up  -->
-                        <!-- <tr v-for="record in activityRecords" v-bind:key="record.type" v-bind:class=" { Sketching: record.Sketching, Drawing: record.Drawing, Painting: record.Painting } "></tr> -->
+                        <tr v-for="record in activityRecords" v-bind:class=" { Sketching: record.type == 'Sketching', Drawing: record.type == 'Drawing', Painting: record.type == 'Painting' } ">
                             <td>{{ shortDate(record.date) }}</td>
                             <td>{{ record.hours }}</td>
                             <td>{{ record.type }}</td>
                             <td>{{ record.medium }}</td>
+                            <td>{{ record.completed }}</td>
+                            <td>{{ shortComment(record.comments) }}</td>
+                            
                         </tr>
 
 
@@ -162,7 +171,8 @@
                 hours: 1,
                 type: 'Sketching',
                 medium: 'Traditional',
-                completed: '',    // added checkbox here     completed: 'Completed'
+                completed: '',    // added checkbox here     
+                comments: '',
                 
 
                 // used with the select-option in the form for the user to select the type
@@ -194,19 +204,16 @@
                 if (!this.medium) {
                     this.errors.push('Select a medium')
                 }
-                // add new input errors here for lab
-
-                // checkbox
-                // if (!this.completed) {
-                //     this.errors.push('')
-                // }
+       
 
                 if (this.errors.length === 0) {
                     let record = {
                         date: date,
                         hours: this.hours,
                         type: this.type,
-                        medium: this.medium
+                        medium: this.medium,
+                        completed: this.completed,
+                        comments: this.comments
                     }
 
                     this.activityRecords.push(record)
@@ -221,6 +228,15 @@
             },
             shortDate(date) {
                 return new Intl.DateTimeFormat('en-US', {timeZone: 'UTC'}).format(date)
+            },
+            shortComment(comments) {
+                if (comments.length < 40) {
+                    return comments
+                } else {
+                    // comments is more than 40 characters
+                    let first40 = comments.substring(0, 40 ) + '...'
+                    return first40
+                }
             }
         },
         computed: {
